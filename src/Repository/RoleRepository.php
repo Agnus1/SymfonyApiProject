@@ -45,6 +45,13 @@ class RoleRepository extends ServiceEntityRepository
         }
     }
 
+    public function getDefaultRole()
+    {
+        return ($this->createQueryBuilder('r')
+            ->andWhere('r.id = 1')
+            ->getQuery()
+            ->getResult())[0];
+    }
     // /**
     //  * @return Role[] Returns an array of Role objects
     //  */
