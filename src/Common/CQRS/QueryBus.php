@@ -9,11 +9,18 @@ class QueryBus implements QueryBusInterface
 {
     use HandleTrait;
 
+    /**
+     * @param MessageBusInterface $queryBus
+     */
     public function __construct(MessageBusInterface $queryBus)
     {
         $this->messageBus = $queryBus;
     }
 
+    /**
+     * @param QueryInterface $query
+     * @return void
+     */
     public function dispatch(QueryInterface $query)
     {
         $this->handle($query);

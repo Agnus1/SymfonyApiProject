@@ -12,6 +12,13 @@ abstract class UserCommand implements CommandInterface
     private ?string $email;
     private bool $isActive;
 
+    /**
+     * @param string $login
+     * @param string $password
+     * @param string $fullName
+     * @param string|null $email
+     * @param bool $isActive
+     */
     public function __construct(
         string $login,
         string $password,

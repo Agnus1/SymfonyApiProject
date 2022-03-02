@@ -7,9 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity("username")]
+#[UniqueEntity("fullName")]
 class User implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -17,22 +20,25 @@ class User implements PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\NotBlank]
     private $username;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
     private $password;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isActive;
+    #[ORM\Column(type: 'boolean', options: ["default" => true])]
+    private $isActive = true;
 
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Attendance::class, orphanRemoval: true)]
     private $attendances;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Assert\NotBlank]
     private $fullName;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
