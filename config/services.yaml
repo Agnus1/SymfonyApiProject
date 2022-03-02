@@ -21,12 +21,21 @@ services:
             - '../src/Common/CQRS/CommandInterface.php'
             - '../src/Common/CQRS/QueryInterface.php'
 
+    App\Common\Services\:
+        resource: '../src/Common/Services/*'
+
+    App\Common\Subscribers\:
+        resource: '../src/Common/Subscribers/*'
+
     App\Repository\:
         resource: '../src/Repository/*'
 
     App\UserBundle\Controller\:
         resource: '../src/UserBundle/Controller/*'
         tags: ['controller.service_arguments']
+
+    App\UserBundle\Request\:
+        resource: '../src/UserBundle/Request/*'
 
     App\UserBundle\Command\CreateUser\CreateUserCommandHandler:
         tags: [messenger.message_handler]

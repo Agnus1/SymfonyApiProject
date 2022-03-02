@@ -14,9 +14,9 @@ class CommandBus implements CommandBusInterface
         $this->messageBus = $commandBus;
     }
 
-    public function dispatch(CommandInterface $command)
+    public function dispatch(CommandInterface $command) : mixed
     {
-        $this->handle($command);
+        return $this->handle($command);
     }
 
 }
