@@ -9,10 +9,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-
+use Psr\Log\LoggerInterface;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
+
+    private static LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        self::$logger = $logger;
+    }
+
     public static function getSubscribedEvents()
     {
         return [KernelEvents::EXCEPTION => "onException"];
@@ -21,7 +29,6 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public static function onException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();
-
         if (!$exception instanceof ApiException && !$exception->getPrevious() instanceof  ApiException) {
             $code = 500;
             $message = "Internal server error";
@@ -31,6 +38,13 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $message = $exception->getErrorbag();
         }
 
-        $event->setResponse(new JsonResponse(["status" => "failed", "code" => $code, "messages" => $message], $code));
+        self::$logger->error(date("d.m.y h:i:s") . " Error occured: " . $exception->getMessage());
+        $event->setResponse(new JsonResponse(
+            [
+                "status" => "failed",
+                "code" => $code,
+                "messages" => $message
+            ], 
+            $code));
     }
 }
